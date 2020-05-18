@@ -86,7 +86,8 @@ mongoose.set('useCreateIndex', true);
 const userSchema = new mongoose.Schema({
   email: String,
   password: String,
-  googleId: String
+  googleId: String,
+  secret: String
 });
 
 ///Enable plug-in for mongoose-local///
@@ -108,28 +109,27 @@ app.get("/", function(req, res) {
   res.render("home")
 });
 
+  ///Google Auth Routes///
 app.get("/auth/google",
   passport.authenticate("google", {
     scope: ["profile"]
   }));
 
 app.get("/auth/google/secrets",
-  passport.authenticate("google", {
-    failureRedirect: "/login"
-  }),
-  function(req, res) {
+  passport.authenticate("google", {failureRedirect: "/login"}), function(req, res) {
     // Successful authentication, redirect secrets.
-    res.redirect('/secrets');
+    res.redirect("/secrets");
   });
 
-  app.get('/auth/facebook', passport.authenticate('facebook'));
+  ///Facebook Auth Routes///
+app.get("/auth/facebook", passport.authenticate("facebook"));
 
-  app.get('/auth/facebook/secrets',
-    passport.authenticate('facebook', { failureRedirect: '/login' }),
-    function(req, res) {
-      res.redirect('/secrets');
-    });
+app.get("/auth/facebook/secrets",
+  passport.authenticate("facebook", { failureRedirect: "/login"}), function(req, res) {
+    res.redirect("/secrets");
+  });
 
+  ///Register Routes///
 app.route("/register")
   .get(function(req, res) {
     res.render("register")
@@ -147,6 +147,7 @@ app.route("/register")
     });
   });
 
+  ///Login Routes///
 app.route("/login")
   .get(function(req, res) {
     res.render("login")
@@ -170,20 +171,52 @@ app.route("/login")
     });
   });
 
+  ///Secrets Routes///
 app.get("/secrets", function(req, res) {
-  if (req.isAuthenticated()) {
-    res.render("secrets");
-  } else {
-    res.redirect("/login");
-  }
+  User.find({"secret": {$ne: null}}, function(err, foundUsers){
+    if (err) {
+      console.log(err);
+    } else {
+      if (foundUsers){
+        res.render("secrets", {userWithSecrets: foundUsers});
+      }
+    }
+  });
 });
 
+  ///Submit Routes///
+app.route("/submit")
+  .get(function( req, res){
+    if (req.isAuthenticated()) {
+      res.render("submit");
+    } else {res.redirect("/login")}
+  })
+  .post(function(req, res) {
+    const submittedSecret = req.body.secret;
+
+    console.log(req.user.id);
+
+    User.findById(req.user.id, function(err, foundUser){
+      if (err){
+        console.log(err);
+      } else {
+        if (foundUser) {
+          foundUser.secret = submittedSecret;
+          foundUser.save(function(){
+            res.redirect("/secrets");
+          });
+        }
+      }
+    });
+  });
+
+  ///Logout Route///
 app.get("/logout", function(req, res) {
   req.logout();
   res.redirect("/");
 });
 
-
+///Sever Listening///
 app.listen(3000, function() {
   console.log("Server is listening on port 3000.");
 });
