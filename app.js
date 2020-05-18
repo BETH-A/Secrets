@@ -10,6 +10,7 @@ const passportLocalMongoose = require('passport-local-mongoose');
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const FacebookStrategy = require("passport-facebook").Strategy;
 const findOrCreate = require('mongoose-findorcreate');
+const config = require("./config.js");
 
 ///Access NPMs///
 const app = express();
@@ -72,10 +73,12 @@ passport.use(new FacebookStrategy({
   }
 ));
 
+
 ///Connect to MongoDB via Mongoose///
-mongoose.connect("mongodb://localhost:27017/userDB", {
-  useNewUrlParser: true,
-  useUnifiedTopology: true
+// mongoose.connect("mongodb+srv://" + userName + ":" + password +"@secrets0-jcgh2.mongodb.net/userDB", {
+mongoose.connect("mongodb+srv://admin-beth:<password>@secrets0-jcgh2.mongodb.net/userDB", {
+useUnifiedTopology: true,
+useNewUrlParser: true,
 });
 
 mongoose.set('useNewUrlParser', true);
@@ -217,6 +220,10 @@ app.get("/logout", function(req, res) {
 });
 
 ///Sever Listening///
-app.listen(3000, function() {
-  console.log("Server is listening on port 3000.");
+let port = process.env.PORT;
+if (port == null || port == "") {
+  port = 3000;
+}
+app.listen(port, function() {
+  console.log("Server has started successfully.");
 });
