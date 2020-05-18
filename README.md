@@ -10,3 +10,6 @@ accounts.
 
 
 Used MongoDB, EJS, Express, Passport, and many other npm packages.
+
+Upon cloning, you will need to run npm i to install all npm packages required to
+run this web application.
