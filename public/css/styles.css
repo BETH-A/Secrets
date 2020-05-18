@@ -1,6 +1,23 @@
 
 body {
-  background-color: #E8ECEF;
+  background: url(../images/topSecretStamp.jpg) no-repeat;
+  background-size: cover;
+  margin-top: 1px;
+}
+
+footer{
+  bottom: 0;
+  height: 60px;
+  left: 0;
+  padding:20px;
+  position: fixed;
+  text-align: center;
+  width: 100%;
+}
+
+.card{
+  background-color: transparent;
+  border-color: transparent;
 }
 
 .centered {
@@ -8,9 +25,14 @@ body {
     text-align: center;
 }
 
+.jumbotron {
+background-color: transparent;
+align-items: center;
+}
+
 .secret-text {
   text-align: center;
   font-size: 2rem;
-  color: #fff;
-  background-color: #000;
+  color: #ae211b;
+  /* background-color: #000; */
 }
