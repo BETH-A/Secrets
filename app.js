@@ -101,6 +101,20 @@ userSchema.plugin(findOrCreate);
 
 const User = new mongoose.model("User", userSchema);
 
+User.collection.indexExists({ "username" : 1 }, function(err, results){
+  console.log(results);
+  if ( results === true) {
+    // Dropping an Index in MongoDB
+    User.collection.dropIndex( { "username" : 1 } , function(err, res) {
+        if (err) {
+            console.log('Error in dropping index!', err);
+        }
+    });
+  } else {
+    console.log("Index doesn't exisit!");
+  }
+});
+
 ///Config passport local///
 passport.use(User.createStrategy());
 
