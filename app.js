@@ -52,7 +52,7 @@ passport.use(new GoogleStrategy({
   },
   function(accessToken, refreshToken, profile, cb) {
     console.log(profile);
-    User.findOrCreate({googleId: profile.id}, function(err, user) {
+    User.findOrCreate({googleId: profile.id, username: profile.id}, function(err, user) {
       return cb(err, user);
     });
   }
@@ -65,7 +65,7 @@ passport.use(new FacebookStrategy({
     callbackURL: "https://secrets-beth.herokuapp.com/auth/facebook/secrets"
   },
   function(accessToken, refreshToken, profile, cb) {
-    User.findOrCreate({facebookId: profile.id }, function (err, user) {
+    User.findOrCreate({facebookId: profile.id, username: profile.id}, function (err, user) {
       return cb(err, user);
     });
   }
