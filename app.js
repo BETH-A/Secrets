@@ -76,7 +76,6 @@ passport.use(new FacebookStrategy({
 
 ///Connect to MongoDB via Mongoose///
 mongoose.connect("mongodb+srv://" + process.env.MONGODB_ID + process.env.MONGODB_PWD +"@secrets0-jcgh2.mongodb.net/userDB", {
-// mongoose.connect("mongodb+srv://admin-beth:ZPs4SnPS5o05KVdy@secrets0-jcgh2.mongodb.net/userDB", {
 useUnifiedTopology: true,
 useNewUrlParser: true,
 });
